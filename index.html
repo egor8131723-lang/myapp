@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моё Mini App</title>
+    <!-- 1. Подключаем официальный скрипт Telegram -->
+    <script src="https://telegram.org"></script>
+    <style>
+        /* Адаптируем цвета под текущую тему пользователя (тёмную или светлую) */
+        body {
+            font-family: sans-serif;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        button {
+            background-color: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="greeting">Привет!</h1>
+    <p>Это твоё первое Telegram Mini App.</p>
+    <button id="sendBtn">Отправить данные боту</button>
+
+    <script>
+        // 2. Инициализируем объект WebApp
+        const tg = window.Telegram.WebApp;
+        
+        // Сообщаем Telegram, что приложение готово к отображению, и разворачиваем его на весь экран
+        tg.ready();
+        tg.expand();
+
+        // 3. Получаем имя пользователя из данных Telegram
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+            document.getElementById('greeting').innerText = `Привет, ${user.first_name}!`;
+        }
+
+        // 4. Настраиваем действие при нажатии на кнопку
+        document.getElementById('sendBtn').addEventListener('click', () => {
+            // Отправляем строку с данными обратно в чат с ботом (приложение при этом закроется)
+            tg.sendData("Пользователь нажал на кнопку внутри Mini App!");
+        });
+    </script>
+</body>
+</html>
