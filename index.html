@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Моё Mini App</title>
+    <title>Вопрос-ответ</title>
     <!-- Подключаем официальный скрипт Telegram -->
     <script src="https://telegram.org"></script>
     <style>
@@ -75,9 +75,13 @@
     <div class="tg-icon">TG</div>
 
     <!-- Ваш основной контент -->
-    <h1 id="greeting">Привет!</h1>
-    <p>Это твоё первое Telegram Mini App.</p>
-    <button id="sendBtn">Отправить данные боту</button>
+    <h1 id="greeting">Привет, Вопрос-ответ!</h1>
+    <p>Это бот, который может ответить на любые ваши вопросы о различных темах.</p>
+    <form>
+        <label for="phone">Введите свой вопрос:</label>
+        <input type="text" id="phone" name="phone" placeholder="Ваш вопрос">
+        <button id="sendBtn">Отправить</button>
+    </form>
 
     <script>
         const tg = window.Telegram.WebApp;
