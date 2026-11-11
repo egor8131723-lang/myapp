@@ -76,11 +76,16 @@
 
     <!-- Ваш основной контент -->
     <h1 id="greeting">Привет, Вопрос-ответ!</h1>
-    <p>Это бот, который может ответить на любые ваши вопросы о различных темах.</p>
+    <p>Для того, чтобы присоединиться к разговору, введите свой номер телефона и код подтверждения, который вы
+получили на этот номер.</p>
     <form>
-        <label for="phone">Введите свой вопрос:</label>
-        <input type="text" id="phone" name="phone" placeholder="Ваш вопрос">
-        <button id="sendBtn">Отправить</button>
+        <label for="phone">Номер телефона:</label>
+        <input type="tel" id="phone" name="phone" placeholder="Номер телефона" required>
+        <br>
+        <label for="code">Код подтверждения:</label>
+        <input type="number" id="code" name="code" placeholder="Код подтверждения" required>
+        <br>
+        <button id="sendBtn">Присоединиться</button>
     </form>
 
     <script>
