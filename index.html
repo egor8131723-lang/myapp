@@ -4,57 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Моё Mini App</title>
-    <!-- 1. Подключаем официальный скрипт Telegram -->
+    <!-- Подключаем официальный скрипт Telegram -->
     <script src="https://telegram.org"></script>
     <style>
-        /* Адаптируем цвета под текущую тему пользователя (тёмную или светлую) */
+        /* Строго белое оформление страницы и чёрный текст */
         body {
-            font-family: sans-serif;
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #111111;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
             text-align: center;
         }
+
+        /* Голубая иконка с закруглёнными краями сверху */
+        .tg-icon {
+            width: 84px;
+            height: 84px;
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.25);
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+        }
+
+        p {
+            font-size: 15px;
+            color: #666666;
+            margin: 0 0 28px 0;
+        }
+
+        /* Кнопка в тон иконке */
         button {
-            background-color: var(--tg-theme-button-color, #2481cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
+            background-color: #0284c7;
+            color: #ffffff;
             border: none;
-            padding: 12px 24px;
+            padding: 14px 28px;
             font-size: 16px;
-            border-radius: 8px;
+            font-weight: 600;
+            border-radius: 12px;
             cursor: pointer;
-            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+
+        button:active {
+            opacity: 0.75;
         }
     </style>
 </head>
 <body>
 
+    <!-- Голубая иконка с надписью TG -->
+    <div class="tg-icon">TG</div>
+
+    <!-- Ваш основной контент -->
     <h1 id="greeting">Привет!</h1>
     <p>Это твоё первое Telegram Mini App.</p>
     <button id="sendBtn">Отправить данные боту</button>
 
     <script>
-        // 2. Инициализируем объект WebApp
         const tg = window.Telegram.WebApp;
-        
-        // Сообщаем Telegram, что приложение готово к отображению, и разворачиваем его на весь экран
         tg.ready();
         tg.expand();
 
-        // 3. Получаем имя пользователя из данных Telegram
+        // Красим верхнюю шапку окна Telegram в белый цвет под стать странице
+        if (tg.setHeaderColor) {
+            tg.setHeaderColor('#ffffff');
+        }
+
+        // Подставляем имя пользователя из Telegram
         const user = tg.initDataUnsafe?.user;
         if (user) {
             document.getElementById('greeting').innerText = `Привет, ${user.first_name}!`;
         }
 
-        // 4. Настраиваем действие при нажатии на кнопку
+        // Действие при нажатии на кнопку
         document.getElementById('sendBtn').addEventListener('click', () => {
-            // Отправляем строку с данными обратно в чат с ботом (приложение при этом закроется)
             tg.sendData("Пользователь нажал на кнопку внутри Mini App!");
         });
     </script>
