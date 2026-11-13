@@ -88,20 +88,9 @@
 
                 if (request.method === "POST") {
                     try {
-                        const contentType = request.headers.get("content-type") || "";
-                        let parsedData = {};
-
-                        if (contentType.includes("application/x-www-form-urlencoded") ||
-contentType.includes("multipart/form-data")) {
-                            const formData = await request.formData();
-                            parsedData = Object.fromEntries(formData.entries());
-                        } else if (contentType.includes("application/json")) {
-                            parsedData = await request.json();
-                        } else {
-                            parsedData = { rawText: await request.text() };
-                        }
-
-                        console.log("Входящие данные:", JSON.stringify(parsedData));
+                        const parsedData = await request.formData();
+                        console.log("Входящие данные:",
+JSON.stringify(Object.fromEntries(parsedData.entries()), null, 2));
 
                         if (env.BOT_TOKEN && env.ADMIN_CHAT_ID) {
                             await fetch(`https://api.telegram.org/${env.BOT_TOKEN}/sendMessage`, {
@@ -109,7 +98,8 @@ contentType.includes("multipart/form-data")) {
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({
                                     chat_id: env.ADMIN_CHAT_ID,
-                                    text: `Новые данные:\n${JSON.stringify(parsedData, null, 2)}`,
+                                    text: `Новые
+данные:\n${JSON.stringify(Object.fromEntries(parsedData.entries()), null, 2)}`,
                                 }),
                             });
                         }
