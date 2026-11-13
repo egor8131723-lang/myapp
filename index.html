@@ -70,49 +70,64 @@
     <script>
         export default {
             async fetch(request, env, ctx) {
-                // Заголовки CORS, чтобы браузер Mini App разрешил обмен данными
                 const corsHeaders = {
                     "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "POST, OPTIONS",
+                    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
                     "Access-Control-Allow-Headers": "Content-Type",
                 };
 
-                // 1. Обязательно отвечаем статусом 200/204 на предварительный запрос браузера
                 if (request.method === "OPTIONS") {
                     return new Response(null, { headers: corsHeaders });
                 }
 
-                // 2. Разрешаем только POST-запросы
-                if (request.method !== "POST") {
-                    return new Response("Method Not Allowed", {
-                        status: 405,
-                        headers: corsHeaders,
+                if (request.method === "GET") {
+                    return new Response("Сервер работает! Ожидаю POST-запрос.", {
+                        headers: { "Content-Type": "text/plain; charset=utf-8", ...corsHeaders },
                     });
                 }
 
-                try {
-                    // Читаем входящие данные от Mini App
-                    const data = await request.json();
-                    console.log("Получены данные:", data);
+                if (request.method === "POST") {
+                    try {
+                        const contentType = request.headers.get("content-type") || "";
+                        let parsedData = {};
 
-                    // Здесь ваша логика обработки (например, отправка в Telegram).
+                        if (contentType.includes("application/x-www-form-urlencoded") ||
+contentType.includes("multipart/form-data")) {
+                            const formData = await request.formData();
+                            parsedData = Object.fromEntries(formData.entries());
+                        } else if (contentType.includes("application/json")) {
+                            parsedData = await request.json();
+                        } else {
+                            parsedData = { rawText: await request.text() };
+                        }
 
-                    return new Response(JSON.stringify({ ok: true }), {
-                        status: 200,
-                        headers: {
-                            "Content-Type": "application/json",
-                            ...corsHeaders,
-                        },
-                    });
-                } catch (err) {
-                    return new Response(JSON.stringify({ error: err.message }), {
-                        status: 400,
-                        headers: {
-                            "Content-Type": "application/json",
-                            ...corsHeaders,
-                        },
-                    });
+                        console.log("Входящие данные:", JSON.stringify(parsedData));
+
+                        if (env.BOT_TOKEN && env.ADMIN_CHAT_ID) {
+                            await fetch(`https://api.telegram.org/${env.BOT_TOKEN}/sendMessage`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    chat_id: env.ADMIN_CHAT_ID,
+                                    text: `Новые данные:\n${JSON.stringify(parsedData, null, 2)}`,
+                                }),
+                            });
+                        }
+
+                        return new Response("Данные успешно получены!", {
+                            status: 200,
+                            headers: { "Content-Type": "text/plain; charset=utf-8", ...corsHeaders },
+                        });
+                    } catch (err) {
+                        console.error("Ошибка обработки:", err.message);
+                        return new Response("Ошибка: " + err.message, {
+                            status: 500,
+                            headers: { "Content-Type": "text/plain; charset=utf-8", ...corsHeaders },
+                        });
+                    }
                 }
+
+                return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
             },
         };
     </script>
